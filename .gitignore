@@ -1,0 +1,8 @@
+Library/*
+Temp/*
+*.scproj
+*.sln
+*.pidb
+*.userprefs
+*.unityproj
+.vs/_test/v15/Server/sqlite3/db.lock
