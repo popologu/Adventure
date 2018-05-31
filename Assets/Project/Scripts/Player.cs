@@ -6,17 +6,22 @@ public class Player : MonoBehaviour {
 	
 	[Header("Visual")]
 	public GameObject model;
+	public float rotatingSpeed = 2f;
 
 	[Header("Movement")]
 	public float movingVelocity;
 	public float jumpingVelocity;
+	
 
 	private Rigidbody playerRigidbody;
 	private bool canJump = false;
+	private Quaternion targetModelRotation;
 
 	// Use this for initialization
 	void Start () {
 		playerRigidbody = GetComponent<Rigidbody> ();
+		targetModelRotation = Quaternion.Euler (0, 0, 0);
+
 	}
 	
 	// Update is called once per frame
@@ -27,6 +32,7 @@ public class Player : MonoBehaviour {
 			 canJump = true;
 	 	}
 
+		model.transform.rotation = Quaternion.Lerp(model.transform.rotation, targetModelRotation, Time.deltaTime * rotatingSpeed);
 		ProcessInput ();
 	}
 
@@ -50,7 +56,9 @@ public class Player : MonoBehaviour {
 				playerRigidbody.velocity.z
 			);
 
-			model.transform.localEulerAngles = new Vector3 (0,270,0);
+			targetModelRotation = Quaternion.Euler(0, 270, 0);
+			
+			// model.transform.localEulerAngles = new Vector3 (0,270,0);
 		}
 		if (Input.GetKey("left")) {
 				playerRigidbody.velocity = new Vector3 (
@@ -58,7 +66,7 @@ public class Player : MonoBehaviour {
 				playerRigidbody.velocity.y,
 				playerRigidbody.velocity.z
 			);
-			model.transform.localEulerAngles = new Vector3 (0,90,0);
+				targetModelRotation = Quaternion.Euler(0, 90, 0);
 		}
 		if (Input.GetKey("up")) {
 				playerRigidbody.velocity = new Vector3 (
@@ -66,7 +74,7 @@ public class Player : MonoBehaviour {
 				playerRigidbody.velocity.y,
 				movingVelocity
 			);
-			model.transform.localEulerAngles = new Vector3 (0,180,0);
+				targetModelRotation = Quaternion.Euler(0, 180, 0);
 		}
 		if (Input.GetKey("down")) {
 				playerRigidbody.velocity = new Vector3 (
@@ -74,7 +82,7 @@ public class Player : MonoBehaviour {
 				playerRigidbody.velocity.y,
 				-movingVelocity
 			);
-			model.transform.localEulerAngles = new Vector3 (0,0,0);
+				targetModelRotation = Quaternion.Euler(0, 0, 0);
 		}
 		if (Input.GetKeyDown("space") && canJump) {
 			canJump = false;
