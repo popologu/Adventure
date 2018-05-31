@@ -12,6 +12,13 @@ public class Player : MonoBehaviour {
 	public float movingVelocity;
 	public float jumpingVelocity;
 	
+	[Header("Equipment")]
+	public Sword sword;
+	public Bow bow;
+	public int arrowAmount = 15;
+	public GameObject bombPrefab;
+	public int bombAmount = 5; // 폭탄 갯수
+	public float throwingSpeed; // 폭탄 던지는 속도
 
 	private Rigidbody playerRigidbody;
 	private bool canJump = false;
@@ -19,6 +26,8 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		bow.gameObject.SetActive (false);
+
 		playerRigidbody = GetComponent<Rigidbody> ();
 		targetModelRotation = Quaternion.Euler (0, 0, 0);
 
@@ -56,7 +65,7 @@ public class Player : MonoBehaviour {
 				playerRigidbody.velocity.z
 			);
 
-			targetModelRotation = Quaternion.Euler(0, 270, 0);
+			targetModelRotation = Quaternion.Euler(0, 90, 0);
 			
 			// model.transform.localEulerAngles = new Vector3 (0,270,0);
 		}
@@ -66,7 +75,7 @@ public class Player : MonoBehaviour {
 				playerRigidbody.velocity.y,
 				playerRigidbody.velocity.z
 			);
-				targetModelRotation = Quaternion.Euler(0, 90, 0);
+				targetModelRotation = Quaternion.Euler(0, 270, 0);
 		}
 		if (Input.GetKey("up")) {
 				playerRigidbody.velocity = new Vector3 (
@@ -74,7 +83,7 @@ public class Player : MonoBehaviour {
 				playerRigidbody.velocity.y,
 				movingVelocity
 			);
-				targetModelRotation = Quaternion.Euler(0, 180, 0);
+				targetModelRotation = Quaternion.Euler(0, 0, 0);
 		}
 		if (Input.GetKey("down")) {
 				playerRigidbody.velocity = new Vector3 (
@@ -82,7 +91,7 @@ public class Player : MonoBehaviour {
 				playerRigidbody.velocity.y,
 				-movingVelocity
 			);
-				targetModelRotation = Quaternion.Euler(0, 0, 0);
+				targetModelRotation = Quaternion.Euler(0, 180, 0);
 		}
 		if (Input.GetKeyDown("space") && canJump) {
 			canJump = false;
@@ -93,6 +102,38 @@ public class Player : MonoBehaviour {
 				playerRigidbody.velocity.z
 			);
 		}
+		if (Input.GetKeyDown ("z")) {
+			sword.gameObject.SetActive (true);
+			bow.gameObject.SetActive (false);
+			sword.Attack ();
+		}
+
+		if (Input.GetKeyDown ("x")) {
+			if(arrowAmount >0) {
+				sword.gameObject.SetActive (false);
+				bow.gameObject.SetActive (true);
+				bow.Attack ();
+				arrowAmount--;
+			}
+			
+		}
+
+		if (Input.GetKeyDown ("c")) {
+			ThrowBomb ();
+		}
+	}
+	void ThrowBomb () {
+		if(bombAmount <=0) {  // 폭탄이 0이 되면..(폭탄을 다 쓰면)
+			return;  //함수에서 나와라..
+		}
+		GameObject bombObject = Instantiate (bombPrefab);
+		bombObject.transform.position = transform.position + model.transform.forward;
+		
+		Vector3 throwingDirection = (model.transform.forward + Vector3.up).normalized; // 플레이어의 모델앞이 throwingDirection
+
+		bombObject.GetComponent<Rigidbody> ().AddForce (throwingDirection * throwingSpeed);
+
+		bombAmount--;    //bombAmount = bombAmount -1
 	}
 }
   
