@@ -24,12 +24,12 @@ public class Bomb : MonoBehaviour {
 		explosionTimer -= Time.deltaTime;
 		if (explosionTimer <= 0f && exploded == false) {
 			exploded = true;
-			// Collider[] hitObject = Physics.OverlapSphere(transform.position, radius);
-
-			// foreach (Collider collider in hitObject) {
-			// 	Debug.Log(collider.name + " was hit!");
-
-			// }
+			Collider[] hitObject = Physics.OverlapSphere(transform.position, radius);
+			foreach (Collider collider in hitObject) {
+				if(collider.GetComponent<Enemy> () != null) {
+					collider.GetComponent<Enemy> ().Hit ();				
+					}
+			}
 			StartCoroutine (Explode());
 
 		}
