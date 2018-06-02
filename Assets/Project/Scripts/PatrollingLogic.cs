@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,15 +23,17 @@ public class PatrollingLogic : MonoBehaviour {
 		if (directionTimer <= 0) {
 			directionTimer = timeToChange;
 
-			directionPointer++;
-			if (directionPointer >= directions.Length) {
-				directionPointer = 0;
+            directionPointer++;
+    		if (directionPointer >= directions.Length) {
+			directionPointer = 0;
 			}
 		}
-		GetComponent<Rigidbody> ().velocity = new Vector3 (
-			directions[directionPointer].x,
+		    GetComponent<Rigidbody> ().velocity = new Vector3 (
+			directions[directionPointer].x * movementSpeed,
 			GetComponent<Rigidbody> ().velocity.y,
-			directions[directionPointer].z
-		);
+			directions[directionPointer].z * movementSpeed
+                    );
 	}
+
+    
 }
